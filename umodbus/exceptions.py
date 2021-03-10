@@ -3,6 +3,12 @@ class ModbusError(Exception):
     pass
 
 
+class ModbusFrameError(ModbusError):
+    """Reply from an unexpected slave, or an error in the received frame."""
+
+    pass
+
+
 class UndefinedModbusError(ModbusError):
     """Catch-all class for non-standard error codes."""
 
