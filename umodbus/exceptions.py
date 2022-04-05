@@ -1,12 +1,27 @@
 class ModbusError(Exception):
-    """ Base class for all Modbus related exception. """
+    """Base class for all Modbus related exception."""
     pass
 
 
-class IllegalFunctionError(ModbusError):
-    """ The function code received in the request is not an allowable action for
-    the server.
+class ModbusFrameError(ModbusError):
+    """Reply from an unexpected slave, or an error in the received frame."""
 
+    pass
+
+
+class UndefinedModbusError(ModbusError):
+    """Catch-all class for non-standard error codes."""
+
+    def __init__(self, error_code):
+        self.error_code = error_code
+
+    def __str__(self):
+        return 'Non-standard Modbus error code %#04x received.' % self.error_code
+
+
+class IllegalFunctionError(ModbusError):
+    """The function code received in the request is not an allowable action for
+    the server.
     """
     error_code = 1
 
@@ -15,7 +30,7 @@ class IllegalFunctionError(ModbusError):
 
 
 class IllegalDataAddressError(ModbusError):
-    """ The data address received in the request is not an allowable address for
+    """The data address received in the request is not an allowable address for
     the server.
     """
     error_code = 2
@@ -25,9 +40,8 @@ class IllegalDataAddressError(ModbusError):
 
 
 class IllegalDataValueError(ModbusError):
-    """ The value contained in the request data field is not an allowable value
+    """The value contained in the request data field is not an allowable value
     for the server.
-
     """
     error_code = 3
 
@@ -36,7 +50,7 @@ class IllegalDataValueError(ModbusError):
 
 
 class ServerDeviceFailureError(ModbusError):
-    """ An unrecoverable error occurred. """
+    """An unrecoverable error occurred."""
     error_code = 4
 
     def __str__(self):
@@ -44,7 +58,7 @@ class ServerDeviceFailureError(ModbusError):
 
 
 class AcknowledgeError(ModbusError):
-    """ The server has accepted the requests and it processing it, but a long
+    """The server has accepted the requests and it processing it, but a long
     duration of time will be required to do so.
     """
     error_code = 5
@@ -54,7 +68,7 @@ class AcknowledgeError(ModbusError):
 
 
 class ServerDeviceBusyError(ModbusError):
-    """ The server is engaged in a long-duration program command. """
+    """The server is engaged in a long-duration program command."""
     error_code = 6
 
     def __str__(self):
@@ -62,9 +76,8 @@ class ServerDeviceBusyError(ModbusError):
 
 
 class MemoryParityError(ModbusError):
-    """ The server attempted to read record file, but detected a parity error
+    """The server attempted to read record file, but detected a parity error
     in memory.
-
     """
     error_code = 8
 
@@ -73,7 +86,7 @@ class MemoryParityError(ModbusError):
 
 
 class GatewayPathUnavailableError(ModbusError):
-    """ The gateway is probably misconfigured or overloaded. """
+    """The gateway is probably misconfigured or overloaded."""
     error_code = 10
 
     def __repr__(self):
@@ -81,7 +94,7 @@ class GatewayPathUnavailableError(ModbusError):
 
 
 class GatewayTargetDeviceFailedToRespondError(ModbusError):
-    """ Didn't get a response from target device. """
+    """Didn't get a response from target device."""
     error_code = 11
 
     def __repr__(self):
